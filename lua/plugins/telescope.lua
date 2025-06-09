@@ -51,6 +51,7 @@ return {
       --  All the info you're looking for is in `:help telescope.setup()`
       --
       defaults = {
+        file_ignore_patterns = {".git/.*"},
         mappings = {
           i = {
             ['<C-s>'] = actions.select_horizontal,

@@ -30,7 +30,7 @@ local live_multigrep = function(opts)
       return vim
         .iter({
           args,
-          { '--color=never', '--no-heading', '--with-filename', '--line-number', '--column', '--smart-case', '--hidden' },
+          { '--color=never', '--no-heading', '--with-filename', '--line-number', '--column', '--smart-case', '--hidden', '--glob', '!.git/*' },
         })
         :flatten()
         :totable()

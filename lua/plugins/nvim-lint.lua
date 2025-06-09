@@ -10,7 +10,7 @@ return {
       lint.linters_by_ft = {
         -- markdown = { 'markdownlint' },
         python = { 'dmypy', 'flake8' },
-        json = { 'jsonlint' }, -- npm install -g jsonlint
+        -- json = { 'jsonlint' }, -- npm install -g jsonlint
         terraform = { 'tflint' }, -- curl -s https://github.com/terraform-linters/tflint?tab=readme-ov-file#installation
         c = { 'clangtidy' }, -- sudo apt install clang-tidy
       }

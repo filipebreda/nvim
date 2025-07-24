@@ -29,12 +29,7 @@ vim.opt.mouse = 'a'
 vim.opt.showmode = false
 
 -- Sync clipboard between OS and Neovim.
---  Schedule the setting after `UiEnter` because it can increase startup-time.
---  Remove this option if you want your OS clipboard to remain independent.
---  See `:help 'clipboard'`
-vim.schedule(function()
-  vim.opt.clipboard = 'unnamedplus'
-end)
+vim.opt.clipboard = 'unnamedplus'
 
 -- Enable break indent to distinguish wrapped from new lines
 vim.opt.breakindent = true
@@ -108,9 +103,95 @@ vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower win
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
 -- Navigate through buffers faster
-vim.keymap.set('n', '<C-n>', ':bn<CR>')
-vim.keymap.set('n', '<C-p>', ':bp<CR>')
 vim.keymap.set('n', '<C-x>', ':bd<CR>')
+
+local function has_git_changes(filepath)
+  if not filepath or filepath == '' then
+    return false
+  end
+
+  if vim.fn.filereadable(filepath) == 0 then
+    return false
+  end
+
+  local cmd = string.format(
+    'git -C %s status --porcelain %s',
+    vim.fn.shellescape(vim.fn.fnamemodify(filepath, ':h')),
+    vim.fn.shellescape(vim.fn.fnamemodify(filepath, ':t'))
+  )
+
+  local result = vim.fn.system(cmd)
+
+  -- If git command failed (not in a git repo), return false
+  if vim.v.shell_error ~= 0 then
+    return false
+  end
+
+  -- If there's any output, file has changes
+  return result and result:match '%S' ~= nil
+end
+
+local function get_buffer_last_change_time(bufnr)
+  local changedtick = vim.api.nvim_buf_get_changedtick(bufnr)
+  return changedtick or 0
+end
+
+local function navigate_to_last_edited()
+  local current_buf = vim.api.nvim_get_current_buf()
+  local buffers = vim.api.nvim_list_bufs()
+  print 'buffers'
+  print(buffers)
+
+  local latest_bufnr = nil
+  local latest_change = 0
+  local latest_name = ''
+
+  for _, bufnr in ipairs(buffers) do
+    print 'buffer nr'
+    print(bufnr)
+    if bufnr ~= current_buf and vim.api.nvim_buf_is_loaded(bufnr) then
+      local filepath = vim.api.nvim_buf_get_name(bufnr)
+
+      if filepath ~= '' and not filepath:match '^%w+://' then
+        local has_changes = has_git_changes(filepath)
+
+        if has_changes then
+          local last_change = get_buffer_last_change_time(bufnr)
+          print 'has changes'
+          print(last_change)
+          print(latest_change)
+
+          if last_change > latest_change then
+            latest_change = last_change
+            latest_bufnr = bufnr
+            latest_name = vim.fn.fnamemodify(filepath, ':t')
+          end
+        end
+      end
+    end
+  end
+
+  if not latest_bufnr then
+    print 'No buffers with git changes found'
+    return
+  end
+
+  vim.api.nvim_set_current_buf(latest_bufnr)
+  print(string.format('Navigated to: %s', latest_name))
+end
+
+vim.keymap.set('n', '<C-p>', navigate_to_last_edited, { desc = 'Navigate to last edited buffer' })
+
+vim.keymap.set('n', '<leader>bo', function()
+  local current_buf = vim.api.nvim_get_current_buf()
+  local buffers = vim.api.nvim_list_bufs()
+
+  for _, buf in ipairs(buffers) do
+    if buf ~= current_buf and vim.api.nvim_buf_is_loaded(buf) then
+      vim.api.nvim_buf_delete(buf, {})
+    end
+  end
+end, { desc = '[B]uffers [O]nly and close all others' })
 
 -- Open terminal
 vim.keymap.set('n', '<leader>t', vim.cmd.term, { desc = 'Open [T]erminal' })

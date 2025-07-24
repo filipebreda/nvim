@@ -193,7 +193,6 @@ return {
     vim.g.python3_host_prog = vim.g.python3_host_prog or '/usr/bin/python3'
     local servers = {
       clangd = {},
-      gopls = {},
       pyright = {
         settings = {
           python = {

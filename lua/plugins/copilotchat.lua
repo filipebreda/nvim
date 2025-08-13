@@ -20,5 +20,6 @@ return {
       { '<leader>ce', '<cmd>CopilotChatExplain<cr>', mode = 'v', desc = '[C]opilot [E]xplain code' },
       { '<leader>cf', '<cmd>CopilotChatFix<cr>', mode = 'v', desc = '[C]opilot [F]ix code' },
     },
+    opts = {},
   },
 }

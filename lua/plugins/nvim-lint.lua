@@ -12,7 +12,7 @@ return {
         python = { 'dmypy', 'flake8' },
         -- json = { 'jsonlint' }, -- npm install -g jsonlint
         terraform = { 'tflint' }, -- curl -s https://github.com/terraform-linters/tflint?tab=readme-ov-file#installation
-        c = { 'clangtidy' }, -- sudo apt install clang-tidy
+        -- c = { 'clangtidy' }, -- sudo apt install clang-tidy
       }
 
       -- To allow other plugins to add linters to require('lint').linters_by_ft,

@@ -288,7 +288,6 @@ vim.api.nvim_create_user_command('CpCwf', function()
   vim.fn.setreg('+', cwf)
   vim.notify('Copied "' .. cwf .. '" to the clipboard!')
 end, {})
-vim.keymap.set('n', '<leader>cf', ':CpCwf<CR>', { desc = 'Copy current [F]ile path' })
 
 -- Copy current directory's path
 vim.api.nvim_create_user_command('CpCwd', function()
@@ -307,7 +306,6 @@ vim.api.nvim_create_user_command('CpCwd', function()
   vim.fn.setreg('+', cwd)
   vim.notify('Copied "' .. cwd .. '" to the clipboard!')
 end, {})
-vim.keymap.set('n', '<leader>cd', ':CpCwd<CR>', { desc = 'Copy current [D]irectory path' })
 
 -- Auto refresh buffers on external changes
 vim.opt.autoread = true

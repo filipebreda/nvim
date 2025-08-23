@@ -51,8 +51,8 @@ local live_multigrep = function(opts)
 end
 
 M.setup = function()
-  vim.keymap.set('n', '<leader>sg', live_multigrep, { desc = '[S]earch by [G]rep' })
-  vim.keymap.set('n', '<localleader>sg', function()
+  vim.keymap.set('n', '<leader>/', live_multigrep, { desc = 'Search grep' })
+  vim.keymap.set('n', '<localleader>/', function()
     local cwd = nil
     local cwf = vim.fn.expand '%:p'
     if cwf ~= '' and vim.uv.fs_stat(cwf) ~= nil then
@@ -69,7 +69,7 @@ M.setup = function()
     live_multigrep {
       cwd = cwd,
     }
-  end, { desc = '[S]earch by [G]rep in current directory' })
+  end, { desc = 'Search grep in current directory' })
 end
 
 return M

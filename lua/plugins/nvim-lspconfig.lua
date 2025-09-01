@@ -198,9 +198,9 @@ return {
           python = {
             pythonPath = vim.g.python3_host_prog,
             analysis = {
-              autoImportCompletions = true, -- Enable auto-import for completions
-              useLibraryCodeForTypes = true, -- Use standard library for types
-              typeCheckingMode = 'off',
+              autoImportCompletions = true,
+              useLibraryCodeForTypes = true,
+              typeCheckingMode = 'basic',
             },
           },
         },

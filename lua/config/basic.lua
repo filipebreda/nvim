@@ -259,6 +259,12 @@ local function jump_to_floating_window()
 end
 vim.keymap.set('n', '<C-w>f', jump_to_floating_window, { desc = 'Go to floating window' })
 
+-- Notes file
+local notes_file = vim.fn.expand("~/notes.txt")
+vim.keymap.set("n", "<leader>n", function()
+  vim.cmd("edit " .. notes_file)
+end, { desc = "Open notes" })
+
 -- Set window title
 vim.api.nvim_create_augroup('SetTerminalTitle', { clear = true })
 

@@ -14,6 +14,8 @@ return {
 
     -- Allows extra capabilities provided by nvim-cmp
     'hrsh7th/cmp-nvim-lsp',
+    -- Python virtual environment manager that hooks into LSP
+    'jglasovic/venv-lsp.nvim',
   },
   config = function()
     -- Brief aside: **What is LSP?**
@@ -193,22 +195,27 @@ return {
     vim.g.python3_host_prog = vim.g.python3_host_prog or '/usr/bin/python3'
     local servers = {
       clangd = {},
-      pyright = {
-        settings = {
-          python = {
-            pythonPath = vim.g.python3_host_prog,
-            analysis = {
-              autoImportCompletions = true,
-              useLibraryCodeForTypes = true,
-              typeCheckingMode = 'basic',
-            },
-          },
-        },
+      -- pyright = {
+      --   settings = {
+      --     python = {
+      --       pythonPath = vim.g.python3_host_prog,
+      --       analysis = {
+      --         autoImportCompletions = true,
+      --         useLibraryCodeForTypes = true,
+      --         typeCheckingMode = 'basic',
+      --       },
+      --     },
+      --   },
+      -- },
+      zubanls = {
+        cmd = { 'zubanls', 'server' }, -- installed via pipx
+        filetypes = { 'python' },
+        root_dir = require('lspconfig').util.root_pattern('.git', 'pyproject.toml', 'setup.py', 'requirements.txt'),
       },
       terraformls = {
         cmd = { 'terraform-ls', 'serve' },
         filetypes = { 'terraform', 'tf', 'tfvars', 'hcl' },
-        root_dir = require('lspconfig.util').root_pattern('.terraform', '.git', '.'),
+        root_dir = require('lspconfig').util.root_pattern('.terraform', '.git', '.'),
       },
       -- rust_analyzer = {},
       -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
@@ -244,9 +251,13 @@ return {
     --  You can press `g?` for help in this menu.
     require('mason').setup()
 
+    -- filter out servers that are not available in mason registry
+    local ensure_installed = vim.tbl_filter(function(server)
+      return server ~= 'zubanls'
+    end, vim.tbl_keys(servers or {}))
+
     -- You can add other tools here that you want Mason to install
     -- for you, so that they are available from within Neovim.
-    local ensure_installed = vim.tbl_keys(servers or {})
     vim.list_extend(ensure_installed, {
       'stylua', -- Used to format Lua code
     })

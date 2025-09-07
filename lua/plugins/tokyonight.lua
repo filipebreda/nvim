@@ -6,5 +6,8 @@ return {
     -- Like many other themes, this one has different styles, and any other could
     -- loaded, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
     -- vim.cmd.hi 'Comment gui=none'
+    vim.cmd('colorscheme tokyonight')
+  end,
+  config = function()
   end,
 }

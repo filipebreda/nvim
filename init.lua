@@ -6,9 +6,6 @@ end
 
 require 'config.lazy'
 
--- Set colorscheme
-vim.cmd.colorscheme 'tokyonight'
-
 -- Set custom post load project config
 local project_post_config = vim.fn.getcwd() .. '/.nvim.post.lua'
 if vim.fn.filereadable(project_post_config) == 1 then

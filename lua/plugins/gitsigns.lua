@@ -59,10 +59,6 @@ return {
         gitsigns.blame_line { full = true }
       end, { desc = '[G]it [B]lame hunk' })
       map('n', '<leader>gB', gitsigns.blame, { desc = '[G]it [B]lame buffer' })
-      map('n', '<leader>gd', gitsigns.diffthis, { desc = '[G]it [D]iff this' })
-      map('n', '<leader>gD', function()
-        gitsigns.diffthis '~'
-      end, { desc = '[G]it [D]iff this ~' })
 
       -- Text object
       map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>')

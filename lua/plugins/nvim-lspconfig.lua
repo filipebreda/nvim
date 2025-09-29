@@ -207,8 +207,8 @@ return {
       --     },
       --   },
       -- },
-      zubanls = {
-        cmd = { 'zubanls', 'server' }, -- installed via pipx
+      ty = {
+        cmd = { 'ty', 'server' }, -- installed via pipx
         filetypes = { 'python' },
         root_dir = require('lspconfig').util.root_pattern('.git', 'pyproject.toml', 'setup.py', 'requirements.txt'),
       },
@@ -253,7 +253,7 @@ return {
 
     -- filter out servers that are not available in mason registry
     local ensure_installed = vim.tbl_filter(function(server)
-      return server ~= 'zubanls'
+      return server ~= 'ty'
     end, vim.tbl_keys(servers or {}))
 
     -- You can add other tools here that you want Mason to install

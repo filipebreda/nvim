@@ -206,33 +206,52 @@ end
 vim.keymap.set({ 'n', 'i', 't' }, '<C-space>', toggle_terminal)
 
 -- [[ Custom functions ]]
--- Copy current file's path
-vim.api.nvim_create_user_command('CpCwf', function()
-  local cwf = vim.fn.expand '%:p'
-  if cwf == '' or vim.uv.fs_stat(cwf) == nil then
-    vim.notify 'File not found!'
-    return
-  end
-  vim.fn.setreg('+', cwf)
-  vim.notify('Copied "' .. cwf .. '" to the clipboard!')
-end, {})
-
--- Copy current directory's path
-vim.api.nvim_create_user_command('CpCwd', function()
-  local cwd = nil
-  local cwf = vim.fn.expand '%:p'
-  if cwf ~= '' and vim.uv.fs_stat(cwf) ~= nil then
-    cwd = vim.fn.expand '%:p:h'
-  end
+-- Copy current file's absolute path
+vim.api.nvim_create_user_command('YankPathAbsolute', function()
+  local cwp = vim.fn.expand '%:p'
   if vim.bo.buftype == 'terminal' then
     local bufname = vim.api.nvim_buf_get_name(0)
-    cwd = bufname:match '^term://(.-)/%d+:'
+    cwp = bufname:match '^term://(.-)/%d+:'
   end
   if vim.bo.filetype == 'oil' then
-    cwd = require('oil').get_current_dir()
+    local dir = require('oil').get_current_dir()
+    if dir == nil then
+      vim.notify 'Directory not found!'
+      return
+    end
+    cwp = dir
   end
-  vim.fn.setreg('+', cwd)
-  vim.notify('Copied "' .. cwd .. '" to the clipboard!')
+  vim.fn.setreg('+', cwp)
+  vim.notify('Copied "' .. cwp .. '" to the clipboard!')
+end, {})
+
+-- Copy current file's relative path
+vim.api.nvim_create_user_command('YankPath', function()
+  local cwp = vim.fn.fnamemodify(vim.fn.expand '%:p', ':.')
+  if vim.bo.buftype == 'terminal' then
+    local bufname = vim.api.nvim_buf_get_name(0)
+    local dir = bufname:match '^term://(.-)/%d+:'
+    cwp = vim.fn.fnamemodify(dir, ':.')
+    if cwp == '' then
+      vim.notify 'At root directory, nothing to yank!'
+      return
+    end
+  end
+  if vim.bo.filetype == 'oil' then
+    local oil = require 'oil'
+    local dir = oil.get_current_dir()
+    if dir == nil then
+      vim.notify 'Directory not found!'
+      return
+    end
+    cwp = vim.fn.fnamemodify(dir, ':.')
+    if cwp == '' then
+      vim.notify 'At root directory, nothing to yank!'
+      return
+    end
+  end
+  vim.fn.setreg('+', cwp)
+  vim.notify('Copied "' .. cwp .. '" to the clipboard!')
 end, {})
 
 -- Auto refresh buffers on external changes
@@ -265,10 +284,10 @@ end
 vim.keymap.set('n', '<C-w>f', jump_to_floating_window, { desc = 'Go to floating window' })
 
 -- Notes file
-local notes_file = vim.fn.expand("~/notes.txt")
-vim.keymap.set("n", "<leader>n", function()
-  vim.cmd("edit " .. notes_file)
-end, { desc = "Open notes" })
+local notes_file = vim.fn.expand '~/notes.txt'
+vim.keymap.set('n', '<leader>n', function()
+  vim.cmd('edit ' .. notes_file)
+end, { desc = 'Open notes' })
 
 -- Set window title
 vim.api.nvim_create_augroup('SetTerminalTitle', { clear = true })

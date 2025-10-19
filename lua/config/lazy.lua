@@ -20,7 +20,7 @@ require 'config.basic'
 -- Setup custom plugins
 local backtowork = require 'custom.plugins.backtowork'
 backtowork.setup()
-vim.keymap.set('n', '<C-p>', backtowork.jump, { desc = 'Jump to last edited file' })
+vim.keymap.set('n', '<BS>', backtowork.jump, { desc = 'Jump to last edited file' })
 
 -- Setup lazy.nvim
 require('lazy').setup {

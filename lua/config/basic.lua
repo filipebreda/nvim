@@ -12,9 +12,10 @@ vim.g.have_nerd_font = true
 vim.o.guifont = 'FiraMono Nerd Font:h12'
 
 -- Set tabs
-vim.bo.shiftwidth = 4
-vim.bo.softtabstop = 4
-vim.bo.expandtab = true
+-- handled by vim-sleuth
+-- vim.bo.shiftwidth = 4
+-- vim.bo.softtabstop = 4
+-- vim.bo.expandtab = true
 vim.bo.autoindent = true
 vim.bo.smartindent = false
 vim.bo.cindent = false

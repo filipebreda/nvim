@@ -290,12 +290,19 @@ vim.keymap.set('n', '<leader>n', function()
 end, { desc = 'Open notes' })
 
 -- Set window title
-vim.api.nvim_create_augroup('SetTerminalTitle', { clear = true })
+local set_title_group = vim.api.nvim_create_augroup('SetTerminalTitle', { clear = true })
 
-vim.api.nvim_create_autocmd('VimEnter', {
-  group = 'SetTerminalTitle',
-  callback = function()
-    vim.opt.title = true
-    vim.opt.titlestring = vim.fn.expand '%:p:h:t'
-  end,
+local function set_title()
+  local cwd = vim.loop.cwd() or vim.fn.getcwd()
+  if not cwd or cwd == '' then
+    return
+  end
+
+  vim.opt.title = true
+  vim.opt.titlestring = vim.fn.fnamemodify(cwd, ':t')
+end
+
+vim.api.nvim_create_autocmd({'VimEnter', 'DirChanged'}, {
+  group = set_title_group,
+  callback = set_title,
 })

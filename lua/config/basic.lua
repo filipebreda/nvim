@@ -11,6 +11,24 @@ vim.g.have_nerd_font = true
 -- Set font family and size
 vim.o.guifont = 'FiraMono Nerd Font:h12'
 
+-- Improve native search (e.g. :find, :grep, etc.)
+vim.opt.path:append '**'
+vim.opt.wildignore:append {
+  '*.zip',
+  '*.tar.gz',
+  '*.tar.bz2',
+  '*.pyc',
+  '*/dist/*',
+  '*/build/*',
+  '*/.git/*',
+  '*/.venv/*',
+  '*/venv/*',
+  '*/__pycache__/*',
+  '*/node_modules/*',
+}
+vim.opt.wildmenu = true
+vim.opt.wildmode = { 'longest:full', 'full' }
+
 -- Set tabs
 -- handled by vim-sleuth
 -- vim.bo.shiftwidth = 4
@@ -95,7 +113,7 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 --
 -- NOTE: This won't work in all terminal emulators/tmux/etc. Try your own mapping
 -- or just use <C-\><C-n> to exit terminal mode
-vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
+vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 vim.keymap.set('t', '<C-S-v>', '<C-\\><C-n>+pi', { desc = 'clipboard paste' })
 vim.keymap.set({ 'i', 'c' }, '<C-S-v>', '<C-r>+', { desc = 'clipboard paste' })
 
@@ -192,6 +210,7 @@ local function toggle_terminal()
         return
       end
     end
+    require('oil').open()
   else
     for _, buf in ipairs(get_sorted_buffers()) do
       if is_terminal(buf.bufnr) and vim.api.nvim_buf_is_valid(buf.bufnr) then
@@ -303,7 +322,7 @@ local function set_title()
   vim.opt.titlestring = vim.fn.fnamemodify(cwd, ':t')
 end
 
-vim.api.nvim_create_autocmd({'VimEnter', 'DirChanged'}, {
+vim.api.nvim_create_autocmd({ 'VimEnter', 'DirChanged' }, {
   group = set_title_group,
   callback = set_title,
 })

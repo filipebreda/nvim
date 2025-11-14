@@ -28,16 +28,16 @@ return {
 
     statusline.config.content.active = function()
       local mode, mode_hl = statusline.section_mode({ trunc_width = 120 })
-      local filename     = statusline.section_filename({ trunc_width = 140 })
       local git          = statusline.section_git({ trunc_width = 75 })
+      local filename     = statusline.section_filename({ trunc_width = 140 })
       local diagnostics  = statusline.section_diagnostics({ trunc_width = 75 })
       local fileinfo     = statusline.section_fileinfo({ trunc_width = 120 })
       local location     = statusline.section_location({ trunc_width = 75 })
 
       return statusline.combine_groups({
         { hl = mode_hl, strings = { mode } },
-        { hl = 'MiniStatuslineFilename', strings = { filename } },       -- filename first
         { hl = 'MiniStatuslineDevinfo',  strings = { git, diagnostics } }, -- git + diagnostics
+        { hl = 'MiniStatuslineFilename', strings = { filename } },       -- filename first
         '%=',
         { hl = 'MiniStatuslineFileinfo', strings = { fileinfo } },
         { hl = 'MiniStatuslineLocation', strings = { location } },

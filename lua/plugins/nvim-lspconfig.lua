@@ -66,35 +66,7 @@ return {
         map('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
 
         -- Find references for the word under your cursor.
-        local function lsp_references()
-          local params = vim.lsp.util.make_position_params()
-          params.context = { includeDeclaration = false }
-          vim.lsp.buf_request(0, 'textDocument/references', params, function(err, result, _, _)
-            if err then
-              vim.notify('LSP error: ' .. err.message, vim.log.levels.ERROR)
-              return
-            end
-            if not result or #result == 0 then
-              vim.notify 'No references found'
-              return
-            end
-
-            if #result == 1 then
-              local location = result[1]
-              local uri = location.uri or location.targetUri
-              local range = location.range or location.targetSelectionRange
-              local filename = vim.uri_to_fname(uri)
-              local row = range.start.line + 1
-              local col = range.start.character + 1
-              vim.cmd('e ' .. filename)
-              vim.api.nvim_win_set_cursor(0, { row, col })
-              return
-            end
-
-            require('telescope.builtin').lsp_references()
-          end)
-        end
-        map('gr', lsp_references, '[G]oto [R]eferences')
+        map('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
 
         -- Jump to the implementation of the word under your cursor.
         --  Useful when your language has ways of declaring types without an actual implementation.
@@ -225,8 +197,6 @@ return {
       --
       -- But for many setups, the LSP (`ts_ls`) will work just fine
       ts_ls = {},
-      --
-
       lua_ls = {
         -- cmd = { ... },
         -- filetypes = { ... },
@@ -241,6 +211,9 @@ return {
           },
         },
       },
+      copilot = {
+        root_dir = require('lspconfig').util.root_pattern('.git', '.'),
+      }
     }
 
     -- Ensure the servers and tools above are installed

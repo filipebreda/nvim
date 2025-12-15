@@ -17,6 +17,20 @@ vim.opt.rtp:prepend(lazypath)
 
 require 'config.basic'
 
+vim.lsp.enable('ty')
+
+vim.api.nvim_create_autocmd("LspAttach", {
+  callback = function(event)
+    local opts = { buffer = event.buf }
+
+    vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+    vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
+    vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
+    vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+    vim.keymap.set("n", "gy", vim.lsp.buf.type_definition, opts)
+  end,
+})
+
 -- Setup custom plugins
 local backtowork = require 'custom.plugins.backtowork'
 backtowork.setup()

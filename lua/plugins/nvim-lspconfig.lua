@@ -2,6 +2,7 @@
 
 return {
   'neovim/nvim-lspconfig',
+  enabled = false,
   dependencies = {
     -- Automatically install LSPs and related tools to stdpath for Neovim
     { 'williamboman/mason.nvim', config = true }, -- NOTE: Must be loaded before dependants
@@ -179,11 +180,11 @@ return {
       --     },
       --   },
       -- },
-      ty = {
-        cmd = { 'ty', 'server' }, -- installed via pipx
-        filetypes = { 'python' },
-        root_dir = require('lspconfig').util.root_pattern('.git', 'pyproject.toml', 'setup.py', 'requirements.txt'),
-      },
+      -- ty = {
+      --   cmd = { 'ty', 'server' }, -- installed via pipx
+      --   filetypes = { 'python' },
+      --   root_dir = require('lspconfig').util.root_pattern('.git', 'pyproject.toml', 'setup.py', 'requirements.txt'),
+      -- },
       terraformls = {
         cmd = { 'terraform-ls', 'serve' },
         filetypes = { 'terraform', 'tf', 'tfvars', 'hcl' },

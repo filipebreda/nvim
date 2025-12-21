@@ -103,7 +103,7 @@ return {
         --
         -- When you move your cursor, the highlights will be cleared (the second autocommand).
         local client = vim.lsp.get_client_by_id(event.data.client_id)
-        if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
+        if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
           local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
           vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
             buffer = event.buf,
@@ -164,13 +164,12 @@ return {
     --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
     --  - settings (table): Override the default settings passed when initializing the server.
     --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
-    vim.g.python3_host_prog = vim.g.python3_host_prog or '/usr/bin/python3'
     local servers = {
       clangd = {},
       -- pyright = {
+      --   root_dir = require('lspconfig').util.root_pattern('pyproject.toml', 'setup.py', 'setup.cfg', '.git', 'requirements.txt'),
       --   settings = {
       --     python = {
-      --       pythonPath = vim.g.python3_host_prog,
       --       analysis = {
       --         autoImportCompletions = true,
       --         useLibraryCodeForTypes = true,
@@ -182,8 +181,21 @@ return {
       ty = {
         cmd = { 'ty', 'server' }, -- installed via pipx
         filetypes = { 'python' },
-        root_dir = require('lspconfig').util.root_pattern('.git', 'pyproject.toml', 'setup.py', 'requirements.txt'),
+        root_dir = require('lspconfig').util.root_pattern('pyproject.toml', 'setup.py', 'setup.cfg', '.git', 'requirements.txt'),
       },
+      -- pyrefly = {
+      --   cmd = { 'pyrefly' },
+      --   filetypes = { 'python' },
+      --   root_dir = require('lspconfig').util.root_pattern('pyproject.toml', 'setup.py', 'setup.cfg', '.git', 'requirements.txt'),
+      --   settings = {
+      --     python = {
+      --       analysis = {
+      --         useLibraryCodeForTypes = true,
+      --         typeCheckingMode = 'basic',
+      --       },
+      --     },
+      --   },
+      -- },
       terraformls = {
         cmd = { 'terraform-ls', 'serve' },
         filetypes = { 'terraform', 'tf', 'tfvars', 'hcl' },
@@ -213,7 +225,7 @@ return {
       },
       copilot = {
         root_dir = require('lspconfig').util.root_pattern('.git', '.'),
-      }
+      },
     }
 
     -- Ensure the servers and tools above are installed
@@ -224,17 +236,12 @@ return {
     --  You can press `g?` for help in this menu.
     require('mason').setup()
 
-    -- filter out servers that are not available in mason registry
-    local ensure_installed = vim.tbl_filter(function(server)
-      return server ~= 'ty'
-    end, vim.tbl_keys(servers or {}))
-
     -- You can add other tools here that you want Mason to install
     -- for you, so that they are available from within Neovim.
-    vim.list_extend(ensure_installed, {
+    vim.list_extend(servers, {
       'stylua', -- Used to format Lua code
     })
-    require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+    require('mason-tool-installer').setup { ensure_installed = servers }
 
     require('mason-lspconfig').setup {
       handlers = {

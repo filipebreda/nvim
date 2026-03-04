@@ -16,6 +16,10 @@ return {
       file_ignore_patterns = { '%.git/' },
     },
 
+    grep = {
+      search = '',
+    },
+
     files = {
       hidden = true,
     },
@@ -43,6 +47,13 @@ return {
       desc = 'Search [F]iles',
     },
     {
+      '<leader>sif',
+      function()
+        require('fzf-lua').files { fd_opts = '--no-ignore' }
+      end,
+      desc = '[S]earch not [I]gnored [F]iles',
+    },
+    {
       '<localleader>f',
       function()
         local cwd = nil
@@ -66,9 +77,19 @@ return {
     {
       '<leader>/',
       function()
-        require('fzf-lua').live_grep { grep_open_files = true }
+        require('fzf-lua').live_grep { grep_open_files = true, rg_opts = '--column --line-number --no-heading --color=always --smart-case --fixed-strings' }
       end,
       desc = 'Search [/]',
+    },
+    {
+      '<leader>si/',
+      function()
+        require('fzf-lua').live_grep {
+          grep_open_files = true,
+          rg_opts = '--column --line-number --no-heading --color=always --smart-case --fixed-strings --no-ignore',
+        }
+      end,
+      desc = '[S]earch not [I]gnored [/]',
     },
     {
       '<localleader>/',
@@ -92,21 +113,21 @@ return {
       desc = 'Search [/] in current directory',
     },
     {
-      '<leader>w',
+      '<leader>sw',
       function()
         require('fzf-lua').grep_cword()
       end,
       desc = 'Search current [W]ord',
     },
     {
-      '<leader>d',
+      '<leader>sd',
       function()
         require('fzf-lua').diagnostics_document()
       end,
       desc = 'Search [D]iagnostics',
     },
     {
-      '<leader>r',
+      '<leader>sr',
       function()
         require('fzf-lua').resume()
       end,

@@ -223,9 +223,6 @@ return {
           },
         },
       },
-      copilot = {
-        root_dir = require('lspconfig').util.root_pattern('.git', '.'),
-      },
     }
 
     -- Ensure the servers and tools above are installed

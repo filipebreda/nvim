@@ -14,23 +14,17 @@ return {
     defaults = {
       formatter = 'path.filename_first',
       file_ignore_patterns = { '%.git/' },
+      hidden = true,
     },
-
     grep = {
       search = '',
     },
-
-    files = {
-      hidden = true,
-    },
-
     lsp = {
       references = {
         show_line = false,
         includeDeclaration = false,
       },
     },
-
     keymap = {
       builtin = {
         ['<C-s>'] = 'select-horizontal',
@@ -51,7 +45,7 @@ return {
       function()
         require('fzf-lua').files { fd_opts = '--no-ignore' }
       end,
-      desc = '[S]earch not [I]gnored [F]iles',
+      desc = '[S]earch icluding [I]gnored [F]iles',
     },
     {
       '<localleader>f',
@@ -77,7 +71,7 @@ return {
     {
       '<leader>/',
       function()
-        require('fzf-lua').live_grep { grep_open_files = true, rg_opts = '--column --line-number --no-heading --color=always --smart-case --fixed-strings' }
+        require('fzf-lua').live_grep { grep_open_files = true, rg_opts = '--column --line-number --no-heading --color=always --smart-case --fixed-strings --' }
       end,
       desc = 'Search [/]',
     },
@@ -89,7 +83,7 @@ return {
           rg_opts = '--column --line-number --no-heading --color=always --smart-case --fixed-strings --no-ignore',
         }
       end,
-      desc = '[S]earch not [I]gnored [/]',
+      desc = '[S]earch including [I]gnored [/]',
     },
     {
       '<localleader>/',
